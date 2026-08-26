@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: gdg_challenges_db
+    restart: always
+    environment:
+      POSTGRES_USER: gdg_user
+      POSTGRES_PASSWORD: gdg_password
+      POSTGRES_DB: gdg_challenges
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./migrations/001_initial_schema.up.sql:/docker-entrypoint-initdb.d/init.sql
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
