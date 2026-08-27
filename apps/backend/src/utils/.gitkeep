@@ -1,0 +1,2 @@
+Framework-agnostic helpers shared by more than one module (pure functions,
+formatting, small guards). Anything Fastify-aware belongs in src/plugins/.

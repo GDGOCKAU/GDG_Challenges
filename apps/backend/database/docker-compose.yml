@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: gdg_challenges_db
+    restart: always
+    # No env_file: the backend's single .env (apps/backend/.env) is the source of
+    # truth for app config. These defaults make `docker compose up -d` work with
+    # no setup; override them via shell environment variables if you need to.
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gdg_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gdg_password}
+      POSTGRES_DB: ${POSTGRES_DB:-gdg_challenges}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    # Starts empty on purpose. Apply the schema with `pnpm db:migrate` so that
+    # Drizzle records it in its journal; an init-script mount would create the
+    # tables behind Drizzle's back and the next migrate would try to redo them.
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

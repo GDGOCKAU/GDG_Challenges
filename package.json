@@ -1,0 +1,26 @@
+{
+  "name": "gdg-challenges",
+  "version": "0.1.0",
+  "private": true,
+  "description": "GDG Challenges \u2014 daily & weekly technical challenge platform (monorepo root)",
+  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "dev": "pnpm run build:shared && pnpm --parallel --filter \"./apps/*\" run dev",
+    "dev:backend": "pnpm run build:shared && pnpm --filter @gdg/backend run dev",
+    "dev:frontend": "pnpm run build:shared && pnpm --filter @gdg/frontend run dev",
+    "build": "pnpm -r run build",
+    "build:shared": "pnpm --filter @gdg/shared run build",
+    "typecheck": "pnpm run build:shared && pnpm -r run typecheck",
+    "clean": "pnpm -r run clean"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

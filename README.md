@@ -253,13 +253,167 @@ Notes worth discussing with the team before or during development — some about
 
 ## 📂 Project Structure
 
+A **pnpm workspaces** monorepo. Everything TypeScript, end to end.
+
 ```
 GDG_Challenges/
-├── backend/     # API, database, authentication, business logic
-└── frontend/    # User-facing web app (challenges, profile, leaderboard)
+├── apps/
+│   ├── backend/          # Fastify HTTP API
+│   │   ├── database/     # PostgreSQL schema, migrations, local docker-compose
+│   │   └── src/
+│   │       ├── config/   # env parsing & validation (single source of truth)
+│   │       ├── modules/  # feature modules — the heart of the backend
+│   │       ├── plugins/  # cross-cutting Fastify plugins (db connection, CORS, …)
+│   │       ├── utils/    # framework-agnostic helpers
+│   │       ├── app.ts    # builds the Fastify instance (no listening)
+│   │       └── server.ts # starts the HTTP server (only place that listens)
+│   └── frontend/         # Vite + React web app
+├── packages/
+│   └── shared/           # types, enums, constants & API contracts shared by both
+├── package.json          # workspace root + common scripts
+├── pnpm-workspace.yaml
+└── tsconfig.json         # base compiler options every package extends
 ```
 
-> **Status:** Early planning stage — `backend/` and `frontend/` are scaffolded but implementation has not started yet. Tech stack decisions are still open.
+> **Status:** base architecture only. No auth, no database access, no business
+> endpoints yet — see the Roadmap above for what comes next.
+
+---
+
+## 🚀 Getting Started
+
+**Requirements:** Node.js **≥ 22** and **pnpm ≥ 9** (`npm install -g pnpm`).
+This repo uses pnpm workspaces — `npm install` / `yarn` will not work.
+
+```bash
+pnpm install          # install every workspace package
+```
+
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Runs backend + frontend together |
+| `pnpm dev:backend` | Backend only → http://localhost:3000 |
+| `pnpm dev:frontend` | Frontend only → http://localhost:5173 |
+| `pnpm build` | Builds every package (shared → apps) |
+| `pnpm typecheck` | Type-checks the whole workspace |
+
+Verify the backend is up:
+
+```bash
+curl http://localhost:3000/health
+# {"status":"ok","uptime":3,"timestamp":"..."}
+```
+
+`GET /health` is currently the **only** endpoint — it exists to confirm the base works.
+
+### Environment variables
+
+```bash
+cp apps/backend/.env.example apps/backend/.env
+```
+
+That is the **only** env file in the repo — `DATABASE_URL` included. It is loaded
+by Node itself (`--env-file-if-exists`), read and validated once in
+[`src/config/env.ts`](apps/backend/src/config/env.ts), and exposed as a typed
+`env` object. **Never read `process.env` anywhere else** — a bad value should fail
+at startup, not on the first request that needs it.
+
+### Database
+
+The PostgreSQL schema and migrations live in
+[`apps/backend/database/`](apps/backend/database/), along with an optional
+`docker-compose.yml` for a local instance — see the README there.
+
+`DATABASE_URL` is **required**; the app refuses to start without it. The
+connection is owned by one plugin,
+[`src/plugins/database.ts`](apps/backend/src/plugins/database.ts), which exposes
+Drizzle as `app.db` and closes the pool on shutdown. postgres.js connects lazily,
+so the server still boots when the database is unreachable.
+
+**Drizzle is the source of truth for the schema.** Tables are declared in
+TypeScript next to the module that owns them (`src/modules/<name>/*.table.ts`),
+and everything under `database/migrations/` is generated:
+
+```bash
+pnpm --filter @gdg/backend db:generate   # after editing a *.table.ts
+pnpm --filter @gdg/backend db:migrate    # apply to DATABASE_URL
+```
+
+Never hand-write a migration — Drizzle would not know about it and the types
+would drift from the database. No queries are written yet.
+
+---
+
+## 🧱 Backend Architecture
+
+### Feature-based modules — not layered folders
+
+Code is organised **by domain**, never by technical layer. There are no global
+`controllers/`, `services/`, `routes/` or `models/` folders, and there never should be.
+
+```
+src/modules/
+├── health/        ← the reference implementation, follow it
+├── auth/          ← placeholders — empty until implemented
+├── users/
+├── challenges/
+├── submissions/
+├── leaderboard/
+└── admin/
+```
+
+Each module owns everything it needs:
+
+```
+modules/<name>/
+├── <name>.route.ts       route definitions + schema wiring
+├── <name>.controller.ts  HTTP layer — thin, no domain logic
+├── <name>.service.ts     domain logic — knows nothing about HTTP
+├── <name>.schema.ts      JSON Schemas for validation & serialisation
+├── <name>.table.ts       Drizzle table definitions (the database schema)
+├── <name>.types.ts       module types
+└── index.ts              the module's public surface
+```
+
+`.schema.ts` and `.table.ts` are deliberately different files: the first is the
+HTTP contract Fastify validates against, the second is the database shape.
+
+Not every file is mandatory, but the naming is. Modules are mounted in one place —
+[`src/modules/index.ts`](apps/backend/src/modules/index.ts) — with business routes
+under the `/api` prefix and infrastructure routes (health) at the root.
+
+**When you add a feature, add a module.** Resist the pull toward shared layer folders:
+they are what makes a codebase hard to change once it has ten features in it.
+
+### Where the database connection lives
+
+In `src/plugins/`, not a top-level `src/db/` folder. Anything that hooks into the
+Fastify lifecycle — a connection to drain on shutdown, a decorator every module
+reads — is infrastructure, and infrastructure is what `plugins/` is for. The
+plugin is wrapped in `fastify-plugin` so its `db` decorator escapes the plugin's
+encapsulation context; without that wrapper `app.db` would be invisible to the
+modules registered next to it.
+
+Use it from a service as `app.db` (or `request.server.db`); it is fully typed via
+module augmentation.
+
+### app.ts vs server.ts
+
+`app.ts` builds and configures Fastify; `server.ts` starts it. That split keeps
+server startup in exactly one place and lets tests build an app and call
+`app.inject()` without binding a port. Do not call `Fastify()` anywhere else.
+
+### Shared package
+
+`@gdg/shared` holds only what **both** sides need — types, enums, constants, API
+contracts. No backend logic (database, Fastify), no frontend code. Import it as
+a normal package:
+
+```ts
+import { API_PREFIX, type HealthResponse } from '@gdg/shared';
+```
+
+It compiles ahead of the apps, so `pnpm dev:*` and `pnpm typecheck` build it first.
 
 ---
 

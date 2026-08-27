@@ -1,0 +1,6 @@
+Placeholder for the "admin" feature module.
+
+Follow the convention documented in ../index.ts:
+  admin.route.ts, admin.controller.ts, admin.service.ts, admin.schema.ts, admin.types.ts, index.ts
+
+Delete this file once the module has real content.
