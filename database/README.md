@@ -1,42 +1,24 @@
 # Database Architecture & Migrations
 
-This folder contains the core PostgreSQL database schema, migrations, constraints, and indexes for the **GDG Challenges MVP**.
+PostgreSQL schema, migrations, constraints, and indexes for the **GDG Challenges MVP**.
 
-## Quick Start (Local Setup)
+## 🚀 Quick Start (Local Setup)
 
-To run the database and automatically apply the initial schema:
+1. **Setup environment:**
+   ```bash
+   cp .env.example .env
 
-```bash
-cd database
-docker compose up -d
+   docker compose up -d
 
-Connection Details:
-Host: localhost
+## 📊 Core Tables
+users: Authentication and roles (student, member, admin).  
 
-Port: 5432
+categories: Technical tracks (Git, Web, AI, Databases, etc.).  
 
-Database: gdg_challenges
+challenges: Daily challenges, difficulty, and metadata.  
 
-User: gdg_user
+attempts: Submissions restricted to 1–5 attempts.  
 
-Password: gdg_password
+points: Points log with unique constraint per challenge.  
 
-📊 Core Tables
-users: Authentication and core user roles (student, member, admin).
-
-categories: Challenge domains (Git, Web, AI, Databases, etc.).
-
-challenges: Daily & Scheduled challenges with JSONB metadata.
-
-attempts: User submission logs (strictly 1–5 attempts per challenge).
-
-points: Points ledger preventing duplicate challenge points.
-
-user_streaks: Daily streak tracker.
-
-⚡ Key Indexes Included
-idx_challenges_date -> Fast query for daily challenges.
-
-idx_attempts_user_challenge -> Quick verification of remaining attempts.
-
-idx_points_user_id & idx_points_created_at -> High-performance leaderboard queries.
+user_streaks: Daily activity and streak tracking.
