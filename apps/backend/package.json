@@ -24,6 +24,23 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
   },
+  "scriptNotes": {
+    "dev": "Starts the backend with tsx watch and loads apps/backend/.env when present.",
+    "build": "Compiles backend TypeScript from src/ into dist/.",
+    "start": "Runs the compiled backend from dist/ with apps/backend/.env when present.",
+    "db:up": "Starts the local Docker PostgreSQL container and waits for its health check.",
+    "db:down": "Stops the local Docker PostgreSQL container and preserves its volume; succeeds harmlessly when Docker is not running.",
+    "db:reset": "Destructively recreates the local Docker database and applies migrations using the local connection string.",
+    "db:setup": "Applies pending Drizzle migrations to DATABASE_URL without starting Docker.",
+    "db:local-setup": "Starts local Docker PostgreSQL and applies migrations without using a hosted DATABASE_URL.",
+    "db:local-seed": "Loads seed data into local Docker PostgreSQL without using a hosted DATABASE_URL.",
+    "db:generate": "Generates a Drizzle migration after a *.table.ts schema change; review and commit the generated files.",
+    "db:migrate": "Applies pending generated migrations to DATABASE_URL.",
+    "db:seed": "Loads database/seeds/seed.sql into DATABASE_URL; intended for an empty development database.",
+    "db:clear": "Clears development rows from DATABASE_URL only with --confirm and refuses NODE_ENV=production.",
+    "typecheck": "Checks backend TypeScript without writing dist/.",
+    "clean": "Removes backend dist/ build output."
+  },
   "dependencies": {
     "@gdg/shared": "workspace:*",
     "drizzle-orm": "^0.45.2",

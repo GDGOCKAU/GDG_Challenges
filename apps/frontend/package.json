@@ -14,6 +14,13 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
   },
+  "scriptNotes": {
+    "dev": "Starts the Vite development server for the React frontend.",
+    "build": "Type-checks the frontend, then creates the production Vite build.",
+    "preview": "Serves the already-built Vite production output locally for review.",
+    "typecheck": "Checks frontend TypeScript without creating a production build.",
+    "clean": "Removes frontend dist/ build output."
+  },
   "dependencies": {
     "@gdg/shared": "workspace:*",
     "react": "^19.2.0",

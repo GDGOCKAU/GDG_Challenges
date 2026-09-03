@@ -30,6 +30,27 @@
     "typecheck": "pnpm run build:shared && pnpm -r run typecheck",
     "clean": "pnpm -r run clean"
   },
+  "scriptNotes": {
+    "dev": "Builds @gdg/shared, then runs frontend and backend development servers together.",
+    "dev:backend": "Builds @gdg/shared, then starts only the Fastify backend.",
+    "dev:frontend": "Builds @gdg/shared, then starts only the Vite frontend.",
+    "db:up": "Starts the optional local Docker PostgreSQL container; it does not affect Supabase.",
+    "db:down": "Stops the local Docker PostgreSQL container while preserving its volume; it is a no-op when Docker is unavailable.",
+    "db:reset": "Destructively recreates the local Docker database volume and applies local migrations.",
+    "db:setup": "Applies pending Drizzle migrations to the database in DATABASE_URL, such as Supabase.",
+    "db:local-setup": "Starts local Docker PostgreSQL and applies migrations using the local connection string.",
+    "db:local-seed": "Loads development seed data into local Docker PostgreSQL, never the DATABASE_URL database.",
+    "db:local-up": "Alias for starting the optional local Docker PostgreSQL container.",
+    "db:local-down": "Alias for stopping the optional local Docker PostgreSQL container.",
+    "db:local-reset": "Alias for destructively recreating the local Docker PostgreSQL database.",
+    "db:migrate": "Applies pending Drizzle migrations to DATABASE_URL.",
+    "db:seed": "Loads development seed data into DATABASE_URL; run only on an empty development database.",
+    "db:clear": "Deletes development rows from DATABASE_URL only when --confirm is supplied; never use on production or shared data without approval.",
+    "build": "Builds every workspace package in dependency order.",
+    "build:shared": "Builds @gdg/shared so its runtime exports and declarations are available to apps.",
+    "typecheck": "Builds @gdg/shared and type-checks every workspace without emitting app JavaScript.",
+    "clean": "Removes generated build output from every workspace package."
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
