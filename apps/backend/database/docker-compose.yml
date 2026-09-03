@@ -10,6 +10,11 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-gdg_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gdg_password}
       POSTGRES_DB: ${POSTGRES_DB:-gdg_challenges}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     # Starts empty on purpose. Apply the schema with `pnpm db:migrate` so that

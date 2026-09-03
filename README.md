@@ -296,6 +296,12 @@ pnpm install          # install every workspace package
 | `pnpm dev:frontend` | Frontend only → http://localhost:5173 |
 | `pnpm build` | Builds every package (shared → apps) |
 | `pnpm typecheck` | Type-checks the whole workspace |
+| `pnpm db:setup` | Applies migrations to the `DATABASE_URL` database |
+| `pnpm db:local-setup` | Starts local Docker PostgreSQL and applies migrations |
+| `pnpm db:seed` | Loads development/demo data |
+| `pnpm db:clear -- --confirm` | Clears data from the configured development database |
+| `pnpm db:local-seed` | Loads demo data into local Docker PostgreSQL |
+| `pnpm db:reset` | Recreates the local database from scratch (destructive) |
 
 Verify the backend is up:
 
@@ -339,6 +345,11 @@ pnpm --filter @gdg/backend db:generate   # after editing a *.table.ts
 pnpm --filter @gdg/backend db:migrate    # apply to DATABASE_URL
 ```
 
+For a hosted database such as Supabase, run `pnpm db:setup` to apply the schema,
+then `pnpm db:seed` to load the demo data. For local Docker PostgreSQL, use
+`pnpm db:local-setup` instead. Use `pnpm db:reset` only when you intentionally
+want to delete the local database volume and recreate it.
+
 Never hand-write a migration — Drizzle would not know about it and the types
 would drift from the database. No queries are written yet.
 
@@ -381,6 +392,16 @@ HTTP contract Fastify validates against, the second is the database shape.
 Not every file is mandatory, but the naming is. Modules are mounted in one place —
 [`src/modules/index.ts`](apps/backend/src/modules/index.ts) — with business routes
 under the `/api` prefix and infrastructure routes (health) at the root.
+
+Route plugins are discovered automatically from `src/modules/**/<name>.route.ts`
+(or the compiled `.js` equivalent), so adding a normal feature does not require
+editing a central registry. Business modules are mounted under `/api/<module>`;
+infrastructure routes such as health remain at the root. The
+`src/modules/index.ts` loader is stable and should rarely need changes.
+
+For a route to be discovered, its file must default-export a Fastify route
+plugin. Keep route files named `*.route.ts`; helper files, tests, and table
+definitions are not loaded.
 
 **When you add a feature, add a module.** Resist the pull toward shared layer folders:
 they are what makes a codebase hard to change once it has ten features in it.

@@ -13,7 +13,7 @@ src/modules/users/user-streaks.table.ts   user_streaks
 src/modules/challenges/categories.table.ts    categories
 src/modules/challenges/challenges.table.ts    challenges, challenge_type, difficulty_level
 src/modules/submissions/attempts.table.ts     attempts
-src/modules/leaderboard/points.table.ts       points
+src/modules/scoring/points.table.ts            points
 ```
 
 Everything in `migrations/` is **generated**. Never hand-edit it and never add a
@@ -40,12 +40,32 @@ DATABASE_URL=postgresql://... pnpm db:migrate
 
 ## 🐳 Local PostgreSQL (optional)
 
-From this directory:
+Run these commands from the repository root:
 
 ```bash
-docker compose up -d
-cd .. && pnpm db:migrate
+pnpm db:setup       # apply Drizzle migrations to DATABASE_URL (Docker optional)
+pnpm db:seed        # insert development/demo data into DATABASE_URL
 ```
+
+`db:setup` creates the tables in the database identified by `DATABASE_URL`; it
+does not start Docker. For a local Docker database, use `pnpm db:local-setup`.
+The database is initially empty. `db:seed` runs `seeds/seed.sql` using the same
+`DATABASE_URL` loaded by the backend.
+
+Useful lifecycle commands:
+
+```bash
+pnpm db:up          # start PostgreSQL only
+pnpm db:local-setup # start Docker PostgreSQL and apply migrations
+pnpm db:local-seed  # load demo data into local Docker PostgreSQL
+pnpm db:migrate     # apply pending migrations
+pnpm db:seed        # load demo data (requires the schema)
+pnpm db:clear -- --confirm # clear development rows; requires explicit confirmation
+pnpm db:down        # stop the container; keeps its volume/data
+pnpm db:reset       # DELETE the local volume, start clean, and migrate
+```
+
+`db:reset` is intentionally destructive and is only for local development.
 
 The container starts **empty** — the schema comes from `db:migrate`, so Drizzle's
 journal stays accurate. Defaults are `gdg_user` / `gdg_password` /
@@ -55,7 +75,7 @@ journal stays accurate. Defaults are `gdg_user` / `gdg_password` /
 DATABASE_URL=postgresql://gdg_user:gdg_password@localhost:5432/gdg_challenges
 ```
 
-Reset from scratch: `docker compose down -v && docker compose up -d`.
+For a full local reset, use `pnpm db:reset` from the repository root.
 
 ## 📊 Core Tables
 

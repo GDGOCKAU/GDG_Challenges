@@ -1,6 +1,8 @@
 Placeholder for the "auth" feature module.
 
-Follow the convention documented in ../index.ts:
-  auth.route.ts, auth.controller.ts, auth.service.ts, auth.schema.ts, auth.types.ts, index.ts
+Follow the convention documented in ../../README.md:
+  auth.route.ts, auth.controller.ts, auth.service.ts, auth.schema.ts, auth.types.ts
+
+The route plugin is discovered automatically; do not edit a central registry.
 
 Delete this file once the module has real content.
