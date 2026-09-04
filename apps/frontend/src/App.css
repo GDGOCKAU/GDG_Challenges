@@ -1,0 +1,51 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #F8F9FA;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.google-accent {
+  display: flex;
+  width: 100%;
+  height: 4px;
+}
+
+.google-accent span {
+  flex: 1;
+}
+
+.google-blue {
+  background-color: #3A7CF5;
+}
+
+.google-red {
+  background-color: #EA4335;
+}
+
+.google-yellow {
+  background-color: #FBBC05;
+}
+
+.google-green {
+  background-color: #34A853;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 24px 16px;
+  }
+}
