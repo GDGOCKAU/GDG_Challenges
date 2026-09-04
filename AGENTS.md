@@ -13,6 +13,16 @@ apps/backend    Fastify HTTP API + Drizzle/PostgreSQL
 packages/shared API contracts, enums, and constants used by both apps
 ```
 
+## Mobile-first product priority
+
+The primary user experience is on mobile, with iPhone users being the highest
+priority audience. Design and implement frontend features mobile-first, then
+enhance them for larger screens. Verify layouts and interactions on iPhone-sized
+viewports and Safari where practical, including touch targets, readable text,
+keyboard behavior, safe-area spacing, loading performance, and offline or poor
+network conditions. Desktop support remains important, but it must not come at
+the expense of the mobile experience.
+
 Use pnpm from the repository root. Do not use npm or yarn for dependency
 installation, and do not hand-edit `pnpm-lock.yaml`.
 

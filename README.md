@@ -12,6 +12,15 @@
 
 The goal is simple: get students engaging with technical content *consistently*, one small challenge at a time.
 
+### Mobile-first experience
+
+Because most visitors use the website on their phones, mobile is the primary
+platform for GDG Challenges, with special priority given to iPhone users. All
+new screens and interactions should be designed mobile-first and then adapted
+for larger screens. The experience should be tested on iPhone-sized viewports
+and Safari where practical, with careful attention to touch-friendly controls,
+readability, keyboard behavior, safe-area spacing, and fast loading.
+
 ### Profile highlights
 
 Every user profile tracks:
