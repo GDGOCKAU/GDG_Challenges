@@ -1,18 +1,28 @@
 import { Outlet } from 'react-router-dom'
 import Navbar from '../../components/Navbar/Navbar'
 import Footer from '../../components/Footer/Footer'
-import './MainLayout.css'
+import { theme } from '../../theme'
 
-function MainLayout() {
+interface MainLayoutProps {
+    darkMode: boolean
+    setDarkMode: (value: boolean) => void
+}
+
+function MainLayout({ darkMode, setDarkMode }: MainLayoutProps) {
+    const t = theme(darkMode)
+
     return (
-        <div className="main-layout">
-            <Navbar />
+        <div
+            className="min-h-screen flex flex-col"
+            style={{ backgroundColor: t.bg, color: t.textPrimary }}
+        >
+            <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-            <main className="main-content">
+            <main className="flex-1 min-h-0">
                 <Outlet />
             </main>
 
-            <Footer />
+            <Footer darkMode={darkMode} />
         </div>
     )
 }

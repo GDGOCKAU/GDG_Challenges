@@ -112,6 +112,13 @@ export default function ProfileHeader({ darkMode, user }: ProfileHeaderProps) {
           </div>
 
           <div
+            className="text-[13px] mt-1 truncate"
+            style={{ fontFamily: "'Roboto', sans-serif", color: t.textMuted }}
+          >
+            {user.email}
+          </div>
+
+          <div
             className="text-[14px] mt-2"
             style={{ fontFamily: "'Roboto', sans-serif", color: t.textSecondary }}
           >

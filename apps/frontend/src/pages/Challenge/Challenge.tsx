@@ -1,7 +1,3 @@
-import Button from '../../components/Button/Button'
-import Input from '../../components/Input/Input'
-import Card from '../../components/Card/Card'
-
 function Challenge() {
     return (
         <div className="min-h-screen bg-background p-8 text-foreground">
