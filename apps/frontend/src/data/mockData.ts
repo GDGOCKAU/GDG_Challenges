@@ -1,4 +1,10 @@
-import type { LeaderboardEntry, LeaderboardScope, Profile, StreakDay } from '../types/gdg';
+import type {
+  LeaderboardEntry,
+  LeaderboardScope,
+  Profile,
+  StreakDay,
+  DailyChallengeData,
+} from '../types/gdg';
 import type { ScopeOption } from '../components/leaderboard/ScopeTabs';
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -103,4 +109,22 @@ export const MOCK_LEADERBOARD: Record<LeaderboardScope, LeaderboardEntry[]> = {
   weekly: buildBoard(980, 41),
   monthly: buildBoard(1740, 68),
   allTime: buildBoard(2900, 105),
+};
+export const MOCK_DAILY_CHALLENGE: DailyChallengeData = {
+  id: 'daily-001',
+  title: 'Git Push Remote Commits',
+  category: 'Git & GitHub',
+  difficulty: 'Easy',
+  type: 'mcq',
+  description:
+    'What is the command used to push your local commits from your local repository to a remote repository on GitHub?',
+  points: 10,
+  pointsSchedule: [10, 8, 6, 4, 2],
+  options: [
+    { id: 'opt_1', text: 'git pull origin main' },
+    { id: 'opt_2', text: 'git push' },
+    { id: 'opt_3', text: 'git commit -m "feat"' },
+    { id: 'opt_4', text: 'git checkout -b branch' },
+  ],
+  starterCode: '// Type your command or solution here\n',
 };

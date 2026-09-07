@@ -45,26 +45,10 @@ export default function Profile({ darkMode = false }: ProfileProps) {
     }
   }, []);
 
-  useEffect(() => {
-    let cancelled = false;
+useEffect(() => {
+    load();
+  }, [load]);
 
-    (async () => {
-      try {
-        const data = await fetchProfile();
-        if (!cancelled) setUser(data);
-      } catch (err) {
-        if (!cancelled) {
-          setError(err instanceof Error ? err.message : 'Could not load your profile.');
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   if (loading) {
     return (
