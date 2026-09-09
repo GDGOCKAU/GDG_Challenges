@@ -69,3 +69,37 @@ export interface LeaderboardResponse {
   entries: LeaderboardEntry[];
   currentUser: LeaderboardEntry | null;
 }
+export type ChallengeType = 'mcq' | 'coding';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
+export interface ChallengeOption {
+  id: string;
+  text: string;
+}
+
+export interface DailyChallengeData {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  difficulty: Difficulty;
+  type: ChallengeType;
+  points: number;
+  pointsSchedule: number[]; // e.g. [10, 8, 6, 4, 2]
+  options?: ChallengeOption[];
+  starterCode?: string;
+  codeSnippet?: string;
+  hint?: string;
+}
+
+export interface ChallengeSubmissionPayload {
+  challengeId: string;
+  answer: string;
+}
+
+export interface ChallengeSubmissionResult {
+  correct: boolean;
+  pointsAwarded: number;
+  remainingAttempts: number;
+  message?: string;
+}
