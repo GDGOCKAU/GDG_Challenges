@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<Challenge />} />
           <Route path="/challenge" element={<Challenge />} />
           <Route path="/profile" element={<Profile darkMode={darkMode} />} />
-          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/leaderboard" element={<Leaderboard darkMode={darkMode} />} />
           <Route path="/admin" element={<Admin />} />
         </Route>
 

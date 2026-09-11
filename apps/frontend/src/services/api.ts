@@ -85,16 +85,17 @@ export async function fetchLeaderboard(
   if (USE_MOCK) {
     await delay(300);
     const profile = getStoredProfile();
-    const entries = (MOCK_LEADERBOARD[scope] ?? MOCK_LEADERBOARD.allTime).map((entry) => {
-      if (entry.isCurrentUser) {
-        return {
-          ...entry,
-          points: profile.points,
-          solved: profile.solvedCount,
-        };
-      }
-      return entry;
-    });
+    const sourceEntries = MOCK_LEADERBOARD[scope] ?? MOCK_LEADERBOARD.allTime;
+    const entries = scope === 'allTime'
+      ? sourceEntries
+        .map((entry) => (
+          entry.isCurrentUser
+            ? { ...entry, points: profile.points, solved: profile.solvedCount }
+            : entry
+        ))
+        .sort((left, right) => right.points - left.points)
+        .map((entry, index) => ({ ...entry, rank: index + 1 }))
+      : sourceEntries;
 
     return {
       scope,
