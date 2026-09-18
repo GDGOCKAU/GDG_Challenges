@@ -6,15 +6,16 @@
 -- Run `pnpm db:setup` first.
 --
 -- Coverage:
---   * 5 categories
---   * 9 challenges across multiple categories/difficulties
+--   * 6 categories (including Git & GitHub and UI badge colors)
+--   * 6 achievements (badges with progress and unlock states)
+--   * 10 challenges across multiple categories/difficulties
 --   * multiple-choice and simple-coding challenge types
 --   * easy/medium/hard difficulty coverage
 --   * active/inactive challenges
---   * users across student/member/admin roles
+--   * users across student/member/admin roles (with titles and themes)
 --   * successful and failed attempts
 --   * points and streak data
---   * JSONB metadata containing options/answers or coding hints
+--   * JSONB metadata containing options, starter code, hints, and points schedule
 --
 -- Password for all seeded users:
 --   "password"
@@ -27,32 +28,47 @@ BEGIN;
 -- =========================================================
 -- Categories
 -- =========================================================
-INSERT INTO categories (id, name, slug, description)
+INSERT INTO categories (id, name, slug, description, color)
 VALUES
-    ('00000000-0000-0000-0000-000000000100', 'Algorithms', 'algorithms','Problem solving techniques including searching, sorting, graphs, and dynamic programming.'),
-    ('00000000-0000-0000-0000-000000000200', 'Data Structures', 'data-structures','Core data structures such as arrays, stacks, queues, hash maps, and trees.'),
-    ('00000000-0000-0000-0000-000000000300', 'SQL & Databases', 'sql-databases','SQL queries, relational concepts, joins, aggregation, and database fundamentals.'),
-    ('00000000-0000-0000-0000-000000000400', 'Programming Basics', 'programming-basics','Fundamentals of programming, control flow, functions, and common language concepts.'),
-    ('00000000-0000-0000-0000-000000000500', 'Web Development', 'web-development','Frontend and backend web development concepts, HTTP, APIs, and browser fundamentals.');
+    ('00000000-0000-0000-0000-000000000100', 'Algorithms', 'algorithms', 'Problem solving techniques including searching, sorting, graphs, and dynamic programming.', '#4285F4'),
+    ('00000000-0000-0000-0000-000000000200', 'Data Structures', 'data-structures', 'Core data structures such as arrays, stacks, queues, hash maps, and trees.', '#34A853'),
+    ('00000000-0000-0000-0000-000000000300', 'SQL & Databases', 'sql-databases', 'SQL queries, relational concepts, joins, aggregation, and database fundamentals.', '#FBBC04'),
+    ('00000000-0000-0000-0000-000000000400', 'Programming Basics', 'programming-basics', 'Fundamentals of programming, control flow, functions, and common language concepts.', '#9C27B0'),
+    ('00000000-0000-0000-0000-000000000500', 'Web Development', 'web-development', 'Frontend and backend web development concepts, HTTP, APIs, and browser fundamentals.', '#EA4335'),
+    ('00000000-0000-0000-0000-000000000600', 'Git & GitHub', 'git-github', 'Version control commands, branches, pull requests, and Git workflow fundamentals.', '#FF7043');
+
+
+-- =========================================================
+-- Achievements
+-- =========================================================
+INSERT INTO achievements (id, title, description, icon, color)
+VALUES
+    ('ach_first', 'First Blood', 'Solve your first challenge', 'flag', '#4285F4'),
+    ('ach_week', 'Week Warrior', 'Keep a 7-day streak', 'flame', '#EA4335'),
+    ('ach_fifty', 'Half Century', 'Solve 50 challenges', 'trophy', '#FBBC04'),
+    ('ach_sniper', 'One Shot', 'Solve 10 in a row first-try', 'target', '#34A853'),
+    ('ach_month', 'Month Machine', 'Keep a 30-day streak', 'flame', '#9C27B0'),
+    ('ach_top3', 'Podium', 'Reach the top 3 of the leaderboard', 'medal', '#FF7043');
 
 
 -- =========================================================
 -- Users
 -- =========================================================
-INSERT INTO users (id, username, email, password_hash, role)
+INSERT INTO users (id, username, email, password_hash, role, title, theme)
 VALUES
-    ('00000000-0000-0000-0000-000000000010', 'sarah', 'sarah@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student'),
-    ('00000000-0000-0000-0000-000000000020', 'sam', 'sam@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'member'),
-    ('00000000-0000-0000-0000-000000000030', 'ahmed', 'ahmed@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student'),
-    ('00000000-0000-0000-0000-000000000040', 'noura', 'noura@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student'),
-    ('00000000-0000-0000-0000-000000000050', 'admin', 'admin@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'admin'),
-    ('00000000-0000-0000-0000-000000000060', 'khalid', 'khalid@example.com','$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student');
+    ('00000000-0000-0000-0000-000000000010', 'sarah', 'sarah@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student', 'Student · KAU', 'Light'),
+    ('00000000-0000-0000-0000-000000000020', 'sam', 'sam@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'member', 'Student · KAU', 'Light'),
+    ('00000000-0000-0000-0000-000000000030', 'ahmed', 'ahmed@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student', 'Student · KAU', 'Light'),
+    ('00000000-0000-0000-0000-000000000040', 'noura', 'noura@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student', 'Student · KAU', 'Light'),
+    ('00000000-0000-0000-0000-000000000050', 'admin', 'admin@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'admin', 'Admin · KAU', 'Dark'),
+    ('00000000-0000-0000-0000-000000000060', 'khalid', 'khalid@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'student', 'Student · KAU', 'Light'),
+    ('00000000-0000-0000-0000-000000001042', 'zo6', 'zo6@gdgkau.dev', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'member', 'Computer Science · KAU', 'Light');
 
 
 -- =========================================================
 -- Challenges
 -- =========================================================
-INSERT INTO challenges(id, category_id, title, description, type, difficulty,base_points, max_attempts, challenge_date, is_active, metadata)
+INSERT INTO challenges (id, category_id, title, description, type, difficulty, base_points, max_attempts, challenge_date, is_active, metadata)
 VALUES
 
 -- =========================================================
@@ -64,8 +80,13 @@ VALUES
     'Two Sum',
     'Given an array of integers and a target, determine whether two values add up to the target.',
     'simple_coding',
-    'easy',100,5,CURRENT_DATE - 2,TRUE,'{"language": "python","sample_input": "[2, 7, 11, 15], 9",
-    "sample_output": "[0, 1]","hint": "Use a hash map to remember values already seen."}'::jsonb),
+    'easy',
+    100,
+    5,
+    CURRENT_DATE - 2,
+    TRUE,
+    '{"language": "python", "sample_input": "[2, 7, 11, 15], 9", "sample_output": "[0, 1]", "hint": "Use a hash map to remember values already seen."}'::jsonb
+),
 
 (
     '00000000-0000-0000-0000-000000000102',
@@ -73,23 +94,44 @@ VALUES
     'Binary Search',
     'Find the zero-based index of a target value in a sorted array, or return -1 if it does not exist.',
     'simple_coding',
-    'medium',200,5,CURRENT_DATE - 1,TRUE,'{"language": "any","sample_input": "[1,3,5,7,9], 7",
-    "sample_output": "3","hint": "Keep low and high bounds and inspect the middle element."}'::jsonb),
+    'medium',
+    200,
+    5,
+    CURRENT_DATE - 1,
+    TRUE,
+    '{"language": "any", "sample_input": "[1,3,5,7,9], 7", "sample_output": "3", "hint": "Keep low and high bounds and inspect the middle element."}'::jsonb
+),
 
 
 -- =========================================================
 -- Data Structures
 -- =========================================================
 (
-    '00000000-0000-0000-0000-000000000201','00000000-0000-0000-0000-000000000200','Stack or Queue?','Which data structure follows the Last-In, First-Out (LIFO) principle?','multiple_choice',
-    'easy',50,5,CURRENT_DATE - 3,TRUE,'{"options": ["Queue", "Stack", "Heap", "Graph"],
-    "correct_answer": "Stack","explanation": "A stack removes the most recently inserted item first."}'::jsonb
+    '00000000-0000-0000-0000-000000000201',
+    '00000000-0000-0000-0000-000000000200',
+    'Stack or Queue?',
+    'Which data structure follows the Last-In, First-Out (LIFO) principle?',
+    'multiple_choice',
+    'easy',
+    50,
+    5,
+    CURRENT_DATE - 3,
+    TRUE,
+    '{"options": ["Queue", "Stack", "Heap", "Graph"], "correct_answer": "Stack", "explanation": "A stack removes the most recently inserted item first."}'::jsonb
 ),
 
 (
-    '00000000-0000-0000-0000-000000000202','00000000-0000-0000-0000-000000000200','Hash Map Lookup','What is the average-case time complexity of looking up a key in a well-designed hash table?',
-    'multiple_choice','medium',100,4,
-    CURRENT_DATE - 1,TRUE,'{"options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"],"correct_answer": "O(1)"}'::jsonb
+    '00000000-0000-0000-0000-000000000202',
+    '00000000-0000-0000-0000-000000000200',
+    'Hash Map Lookup',
+    'What is the average-case time complexity of looking up a key in a well-designed hash table?',
+    'multiple_choice',
+    'medium',
+    100,
+    4,
+    CURRENT_DATE - 1,
+    TRUE,
+    '{"options": ["O(1)", "O(log n)", "O(n)", "O(n log n)"], "correct_answer": "O(1)"}'::jsonb
 ),
 
 
@@ -97,15 +139,31 @@ VALUES
 -- SQL & Databases
 -- =========================================================
 (
-    '00000000-0000-0000-0000-000000000301','00000000-0000-0000-0000-000000000300','Count Active Users',
-    'Write a SQL query that counts rows in the users table whose role is student.','simple_coding','easy',100,5,CURRENT_DATE - 4,TRUE,
-    '{"language": "sql","sample_output": "COUNT(*)","hint": "Use COUNT(*) with a WHERE clause."}'::jsonb
+    '00000000-0000-0000-0000-000000000301',
+    '00000000-0000-0000-0000-000000000300',
+    'Count Active Users',
+    'Write a SQL query that counts rows in the users table whose role is student.',
+    'simple_coding',
+    'easy',
+    100,
+    5,
+    CURRENT_DATE - 4,
+    TRUE,
+    '{"language": "sql", "sample_output": "COUNT(*)", "hint": "Use COUNT(*) with a WHERE clause."}'::jsonb
 ),
 
 (
-    '00000000-0000-0000-0000-000000000302','00000000-0000-0000-0000-000000000300','INNER JOIN',
-    'Which SQL JOIN returns only rows with matching values in both joined tables?','multiple_choice','medium',125,5,CURRENT_DATE,
-    TRUE,'{"options": ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL OUTER JOIN"],"correct_answer": "INNER JOIN"}'::jsonb
+    '00000000-0000-0000-0000-000000000302',
+    '00000000-0000-0000-0000-000000000300',
+    'INNER JOIN',
+    'Which SQL JOIN returns only rows with matching values in both joined tables?',
+    'multiple_choice',
+    'medium',
+    125,
+    5,
+    CURRENT_DATE,
+    TRUE,
+    '{"options": ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN", "FULL OUTER JOIN"], "correct_answer": "INNER JOIN"}'::jsonb
 ),
 
 
@@ -113,17 +171,31 @@ VALUES
 -- Programming Basics
 -- =========================================================
 (
-    '00000000-0000-0000-0000-000000000401','00000000-0000-0000-0000-000000000400','FizzBuzz',
+    '00000000-0000-0000-0000-000000000401',
+    '00000000-0000-0000-0000-000000000400',
+    'FizzBuzz',
     'For numbers from 1 to N, print Fizz for multiples of 3, Buzz for multiples of 5, and FizzBuzz for multiples of both.',
-    'simple_coding','easy',75,5,
-    CURRENT_DATE - 5,TRUE,'{"language": "any","sample_input": "5","sample_output": "1\\n2\\nFizz\\n4\\nBuzz"}'::jsonb
+    'simple_coding',
+    'easy',
+    75,
+    5,
+    CURRENT_DATE - 5,
+    TRUE,
+    '{"language": "any", "sample_input": "5", "sample_output": "1\\n2\\nFizz\\n4\\nBuzz"}'::jsonb
 ),
 
 (
-    '00000000-0000-0000-0000-000000000402','00000000-0000-0000-0000-000000000400','Variable Scope',
+    '00000000-0000-0000-0000-000000000402',
+    '00000000-0000-0000-0000-000000000400',
+    'Variable Scope',
     'Which keyword is commonly used in JavaScript to declare a block-scoped variable that can be reassigned?',
-    'multiple_choice','medium',100,4,
-    CURRENT_DATE + 1,TRUE,'{"options": ["var", "let", "const", "static"],"correct_answer": "let"}'::jsonb
+    'multiple_choice',
+    'medium',
+    100,
+    4,
+    CURRENT_DATE + 1,
+    TRUE,
+    '{"options": ["var", "let", "const", "static"], "correct_answer": "let"}'::jsonb
 ),
 
 
@@ -131,10 +203,45 @@ VALUES
 -- Web Development
 -- =========================================================
 (
-    '00000000-0000-0000-0000-000000000501','00000000-0000-0000-0000-000000000500','HTTP Status Codes',
+    '00000000-0000-0000-0000-000000000501',
+    '00000000-0000-0000-0000-000000000500',
+    'HTTP Status Codes',
     'Which HTTP status code indicates that a request succeeded and returned a normal response?',
-    'multiple_choice','easy',50,5,CURRENT_DATE + 3, FALSE,
-    '{"options": ["200", "301", "404", "500"],"correct_answer": "200","note": "This challenge is intentionally inactive for UI filtering tests."}'::jsonb
+    'multiple_choice',
+    'easy',
+    50,
+    5,
+    CURRENT_DATE + 3,
+    FALSE,
+    '{"options": ["200", "301", "404", "500"], "correct_answer": "200", "note": "This challenge is intentionally inactive for UI filtering tests."}'::jsonb
+),
+
+
+-- =========================================================
+-- Git & GitHub
+-- =========================================================
+(
+    '00000000-0000-0000-0000-000000000601',
+    '00000000-0000-0000-0000-000000000600',
+    'Git Push Remote Commits',
+    'What is the command used to push your local commits from your local repository to a remote repository on GitHub?',
+    'simple_coding',
+    'easy',
+    10,
+    5,
+    CURRENT_DATE,
+    TRUE,
+    '{
+      "starter_code": "// Type your command or solution here\\n",
+      "hint": "Think of the keyword you use to upload changes: `git push <remote> <branch>` or just `git push`.",
+      "points_schedule": [10, 8, 6, 4, 2],
+      "options": [
+        {"id": "opt_1", "text": "git pull origin main"},
+        {"id": "opt_2", "text": "git push"},
+        {"id": "opt_3", "text": "git commit -m \\"feat\\""},
+        {"id": "opt_4", "text": "git checkout -b branch"}
+      ]
+    }'::jsonb
 );
 
 
@@ -147,28 +254,28 @@ INSERT INTO attempts
 VALUES
 
 -- Sarah: successful Algorithms challenge
-('00000000-0000-0000-0000-000000001001','00000000-0000-0000-0000-000000000010','00000000-0000-0000-0000-000000000101',1,'[1, 0]',TRUE,CURRENT_TIMESTAMP - INTERVAL '4 days'),
+('00000000-0000-0000-0000-000000001001', '00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000101', 1, '[1, 0]', TRUE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
 
 -- Sam: successful Data Structures challenge
-('00000000-0000-0000-0000-000000001002','00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000201',1,'Stack',TRUE,CURRENT_TIMESTAMP - INTERVAL '1 day'),
+('00000000-0000-0000-0000-000000001002', '00000000-0000-0000-0000-000000000020', '00000000-0000-0000-0000-000000000201', 1, 'Stack', TRUE, CURRENT_TIMESTAMP - INTERVAL '1 day'),
 
 -- Sam: failed then successful Two Sum
-('00000000-0000-0000-0000-000000001003','00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000101',1,'[0, 2]',FALSE,CURRENT_TIMESTAMP - INTERVAL '2 days'),
-('00000000-0000-0000-0000-000000001004','00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000101',2,'[0, 1]',TRUE,CURRENT_TIMESTAMP - INTERVAL '2 days' + INTERVAL '2 minutes'),
+('00000000-0000-0000-0000-000000001003', '00000000-0000-0000-0000-000000000020', '00000000-0000-0000-0000-000000000101', 1, '[0, 2]', FALSE, CURRENT_TIMESTAMP - INTERVAL '2 days'),
+('00000000-0000-0000-0000-000000001004', '00000000-0000-0000-0000-000000000020', '00000000-0000-0000-0000-000000000101', 2, '[0, 1]', TRUE, CURRENT_TIMESTAMP - INTERVAL '2 days' + INTERVAL '2 minutes'),
 
 -- Ahmed: SQL-focused
-('00000000-0000-0000-0000-000000001005','00000000-0000-0000-0000-000000000030','00000000-0000-0000-0000-000000000301',1,'SELECT COUNT(*) FROM users WHERE role = ''student'';',TRUE,CURRENT_TIMESTAMP - INTERVAL '4 days'),
-('00000000-0000-0000-0000-000000001006','00000000-0000-0000-0000-000000000030','00000000-0000-0000-0000-000000000302',1,'LEFT JOIN',FALSE,CURRENT_TIMESTAMP - INTERVAL '1 day'),
-('00000000-0000-0000-0000-000000001007','00000000-0000-0000-0000-000000000030','00000000-0000-0000-0000-000000000302',2,'INNER JOIN',TRUE,CURRENT_TIMESTAMP - INTERVAL '23 hours'),
+('00000000-0000-0000-0000-000000001005', '00000000-0000-0000-0000-000000000030', '00000000-0000-0000-0000-000000000301', 1, 'SELECT COUNT(*) FROM users WHERE role = ''student'';', TRUE, CURRENT_TIMESTAMP - INTERVAL '4 days'),
+('00000000-0000-0000-0000-000000001006', '00000000-0000-0000-0000-000000000030', '00000000-0000-0000-0000-000000000302', 1, 'LEFT JOIN', FALSE, CURRENT_TIMESTAMP - INTERVAL '1 day'),
+('00000000-0000-0000-0000-000000001007', '00000000-0000-0000-0000-000000000030', '00000000-0000-0000-0000-000000000302', 2, 'INNER JOIN', TRUE, CURRENT_TIMESTAMP - INTERVAL '23 hours'),
 
 -- Noura: mixed results
-('00000000-0000-0000-0000-000000001008','00000000-0000-0000-0000-000000000040','00000000-0000-0000-0000-000000000401',1,'1 2 Fizz 4 Buzz',TRUE,CURRENT_TIMESTAMP - INTERVAL '5 days'),
-('00000000-0000-0000-0000-000000001009','00000000-0000-0000-0000-000000000040','00000000-0000-0000-0000-000000000402',1,'var',FALSE,CURRENT_TIMESTAMP - INTERVAL '1 day'),
-('00000000-0000-0000-0000-000000001010','00000000-0000-0000-0000-000000000040','00000000-0000-0000-0000-000000000402',2,'let',TRUE,CURRENT_TIMESTAMP - INTERVAL '22 hours'),
+('00000000-0000-0000-0000-000000001008', '00000000-0000-0000-0000-000000000040', '00000000-0000-0000-0000-000000000401', 1, '1 2 Fizz 4 Buzz', TRUE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+('00000000-0000-0000-0000-000000001009', '00000000-0000-0000-0000-000000000040', '00000000-0000-0000-0000-000000000402', 1, 'var', FALSE, CURRENT_TIMESTAMP - INTERVAL '1 day'),
+('00000000-0000-0000-0000-000000001010', '00000000-0000-0000-0000-000000000040', '00000000-0000-0000-0000-000000000402', 2, 'let', TRUE, CURRENT_TIMESTAMP - INTERVAL '22 hours'),
 
 -- Khalid: unsuccessful first attempt
-('00000000-0000-0000-0000-000000001011','00000000-0000-0000-0000-000000000060','00000000-0000-0000-0000-000000000401',1,'1 2 Buzz 4 Fizz',FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
-('00000000-0000-0000-0000-000000001012','00000000-0000-0000-0000-000000000060','00000000-0000-0000-0000-000000000401',2,'1 2 Fizz 4 Buzz',TRUE,CURRENT_TIMESTAMP - INTERVAL '5 days' + INTERVAL '5 minutes');
+('00000000-0000-0000-0000-000000001011', '00000000-0000-0000-0000-000000000060', '00000000-0000-0000-0000-000000000401', 1, '1 2 Buzz 4 Fizz', FALSE, CURRENT_TIMESTAMP - INTERVAL '5 days'),
+('00000000-0000-0000-0000-000000001012', '00000000-0000-0000-0000-000000000060', '00000000-0000-0000-0000-000000000401', 2, '1 2 Fizz 4 Buzz', TRUE, CURRENT_TIMESTAMP - INTERVAL '5 days' + INTERVAL '5 minutes');
 
 
 -- =========================================================
@@ -182,24 +289,24 @@ INSERT INTO points
 VALUES
 
 -- Sarah
-('00000000-0000-0000-0000-000000005001','00000000-0000-0000-0000-000000000010','00000000-0000-0000-0000-000000000101',100,'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '4 days'),
-('00000000-0000-0000-0000-000000005002','00000000-0000-0000-0000-000000000010','00000000-0000-0000-0000-000000000102',200,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '1 day'),
-('00000000-0000-0000-0000-000000005003','00000000-0000-0000-0000-000000000010','00000000-0000-0000-0000-000000000201',50,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '3 days'),
+('00000000-0000-0000-0000-000000005001', '00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000101', 100, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '4 days'),
+('00000000-0000-0000-0000-000000005002', '00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000102', 200, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+('00000000-0000-0000-0000-000000005003', '00000000-0000-0000-0000-000000000010', '00000000-0000-0000-0000-000000000201', 50, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '3 days'),
 
 -- Sam
-('00000000-0000-0000-0000-000000005004','00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000101',100,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '2 days'),
-('00000000-0000-0000-0000-000000005005','00000000-0000-0000-0000-000000000020','00000000-0000-0000-0000-000000000301',100,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '23 hours'),
+('00000000-0000-0000-0000-000000005004', '00000000-0000-0000-0000-000000000020', '00000000-0000-0000-0000-000000000101', 100, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '2 days'),
+('00000000-0000-0000-0000-000000005005', '00000000-0000-0000-0000-000000000020', '00000000-0000-0000-0000-000000000301', 100, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '23 hours'),
 
 -- Ahmed
-('00000000-0000-0000-0000-000000005006','00000000-0000-0000-0000-000000000030','00000000-0000-0000-0000-000000000301',100,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '4 days'),
-('00000000-0000-0000-0000-000000005007','00000000-0000-0000-0000-000000000030','00000000-0000-0000-0000-000000000302',125,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '23 hours'),
+('00000000-0000-0000-0000-000000005006', '00000000-0000-0000-0000-000000000030', '00000000-0000-0000-0000-000000000301', 100, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '4 days'),
+('00000000-0000-0000-0000-000000005007', '00000000-0000-0000-0000-000000000030', '00000000-0000-0000-0000-000000000302', 125, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '23 hours'),
 
 -- Noura
-('00000000-0000-0000-0000-000000005008','00000000-0000-0000-0000-000000000040','00000000-0000-0000-0000-000000000401',75,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '5 days'),
-('00000000-0000-0000-0000-000000005009','00000000-0000-0000-0000-000000000040','00000000-0000-0000-0000-000000000402',100,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '22 hours'),
+('00000000-0000-0000-0000-000000005008', '00000000-0000-0000-0000-000000000040', '00000000-0000-0000-0000-000000000401', 75, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '5 days'),
+('00000000-0000-0000-0000-000000005009', '00000000-0000-0000-0000-000000000040', '00000000-0000-0000-0000-000000000402', 100, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '22 hours'),
 
 -- Khalid
-('00000000-0000-0000-0000-000000005010','00000000-0000-0000-0000-000000000060','00000000-0000-0000-0000-000000000401',75,'daily_challenge',CURRENT_TIMESTAMP - INTERVAL '5 days');
+('00000000-0000-0000-0000-000000005010', '00000000-0000-0000-0000-000000000060', '00000000-0000-0000-0000-000000000401', 75, 'daily_challenge', CURRENT_TIMESTAMP - INTERVAL '5 days');
 
 
 -- =========================================================
@@ -213,7 +320,22 @@ VALUES
     ('00000000-0000-0000-0000-000000000030', 3, 5, CURRENT_DATE - 1),
     ('00000000-0000-0000-0000-000000000040', 2, 3, CURRENT_DATE - 1),
     ('00000000-0000-0000-0000-000000000050', 0, 0, NULL),
-    ('00000000-0000-0000-0000-000000000060', 1, 2, CURRENT_DATE - 5);
+    ('00000000-0000-0000-0000-000000000060', 1, 2, CURRENT_DATE - 5),
+    ('00000000-0000-0000-0000-000000001042', 12, 24, CURRENT_DATE);
+
+
+-- =========================================================
+-- User Achievements Progress
+-- =========================================================
+INSERT INTO user_achievements
+    (user_id, achievement_id, unlocked, progress, unlocked_at)
+VALUES
+    ('00000000-0000-0000-0000-000000001042', 'ach_first', TRUE, 100, '2025-02-12 10:00:00+03'),
+    ('00000000-0000-0000-0000-000000001042', 'ach_week', TRUE, 100, '2025-04-02 10:00:00+03'),
+    ('00000000-0000-0000-0000-000000001042', 'ach_fifty', TRUE, 100, '2025-06-18 10:00:00+03'),
+    ('00000000-0000-0000-0000-000000001042', 'ach_sniper', TRUE, 100, '2025-07-09 10:00:00+03'),
+    ('00000000-0000-0000-0000-000000001042', 'ach_month', FALSE, 40, NULL),
+    ('00000000-0000-0000-0000-000000001042', 'ach_top3', FALSE, 66, NULL);
 
 
 COMMIT;
